@@ -60,3 +60,27 @@
 - `output/residential_parcels.geojson` – saved pipeline output
 - `evidence/` – screenshots for submission
 
+## Evidence
+
+**A. Console output of `python src/run_lab8.py`** (connection, feature count, equality, output path)
+
+![Run output](evidence/A_run_lab8_console.png)
+
+**B. WMS parcels map in QGIS** (WMS/WMTS connection to `http://127.0.0.1:5000/wms`)
+
+![QGIS WMS layer](evidence/B_qgis_wms.png)
+
+**C. WFS parcels vector layer and attribute table in QGIS** (WFS connection to `http://127.0.0.1:5000/wfs`)
+
+![QGIS WFS layer and attribute table](evidence/C_qgis_wfs_attributes.png)
+
+**D. Flask terminal showing requests** (`/health` 200, Residential 200, Commercial 200, Unknown 400)
+
+![Flask requests](evidence/D_flask_requests.png)
+
+The saved GeoJSON is in [`output/residential_parcels.geojson`](output/residential_parcels.geojson).
+
+**Note on the GetMap test URL:** the sample BBOX (`118.5,0,118.505,0.005`) returned a blank PNG because the parcels lie further east (about 118.511–118.513° E). Using `BBOX=118.511,-0.0005,118.514,0.0025` showed both parcels. In QGIS, "Zoom to Layer" tool picks the correct extent automatically.
+
+## Explain the Data Path
+
