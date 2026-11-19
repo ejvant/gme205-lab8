@@ -84,3 +84,36 @@ The saved GeoJSON is in [`output/residential_parcels.geojson`](output/residentia
 
 ## Explain the Data Path
 
+**1. What parts of the pipeline were reused from Laboratory 7–8 rather than rewritten?**
+`database.py` (connection check and the parameterized query with `ST_Transform` and `ST_AsGeoJSON`), `spatial.py` (`Parcel.from_row()` and `to_feature()`), and `exchange.py` (FeatureCollection builder and validation) were copied unchanged from Lab 7, together with the same `lab6.parcels` table. Only `pipeline.py`, `run_lab8.py`, and `app.py` are new.
+
+**2. Why is ParcelPipeline a useful coordinating object? What should it NOT do?**
+The `ParcelPipeline` organizes the existing steps and runs them in the correct order using the land_use input. It should not handle database settings, SQL queries, Flask routes, file paths, or GeoJSON creation.
+
+**3. Why must we specify stable query ordering when comparing outputs?**
+Without `ORDER BY`, PostgreSQL may return records in different orders each time. This can make two outputs appear different even if the data is the same. Using `ORDER BY parcel_id` keeps the records in a consistent order.
+
+**4. What is the difference between a saved .geojson file and the Flask endpoint?**
+A `.geojson` file is a saved copy of the data that can be shared or opened offline. It does not automatically update when the database changes. On the other hand, the Flask endpoint retrieves updated data from the database whenever someone makes a request, accepts a parameter (`land_use`), and only works while the Flask server is running.
+
+**5. How do the temporary prints and HTTP responses help locate a failed boundary?**
+The printed messages help identify which step of the pipeline is working or failing, such as the database connection, feature count, or output comparison. HTTP status codes also help identify problems in the Flask service.  For example, `200` means success, `400` means invalid input, `503` means a database connection problem, and `500` means an internal error. In this exercise, the `ImportError` from an empty `ogc_services.py` and the blank GetMap image were identified as issues. 
+
+**6. Compare WMS and WFS in QGIS: what can you inspect in the vector attribute table that you cannot inspect in the rendered WMS image?**
+The WMS layer is only a PNG picture, so individual parcel attributes cannot be viewed or edited directly. WFS provides actual vector features, allowing users to open the attribute table and view information such as `parcel_id` and `land_use`. WFS features can also be selected, filtered, styled, and exported. he WMS 1.1.1 and WFS 1.0.0 services in this laboratory only support the basic requests needed for the exercise and are not OGC-certified servers.
+
+## Author
+Enoch Joshua V. Antonio  
+MS Geomatics Engineering
+
+## References
+
+- OGC WMS 1.1.1: https://cite.ogc.org/te2/about/wms11/1.1.1/site/OGCTestData/wms/1.1.1/spec/wms1.1.1.html
+- OGC WFS 1.0.0: https://cite.ogc.org/teamengine/about/wfs10/1.0.0/site/OGCTestData/wfs/1.0.0/specs/wfs/1.0.0/02-058.html
+- QGIS OGC client: https://docs.qgis.org/3.44/en/docs/user_manual/working_with_ogc/ogc_client_support.html
+- Flask Documentation: https://flask.palletsprojects.com/en/stable/quickstart/
+- Psycopg 3: https://www.psycopg.org/psycopg3/docs/
+- PostGIS: https://postgis.net/docs/
+- RFC 7946: https://www.rfc-editor.org/rfc/rfc7946
+
+Edited on GitHub web interface and VS Code
