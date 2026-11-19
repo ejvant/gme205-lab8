@@ -11,6 +11,7 @@
 | PostgreSQL | 18.6 |
 | PostGIS | 3.6 |
 | Python | 3.14.7 |
+| QGIS | 3.44.13-Solothurn (WMS/WMTS and WFS client) |
 | Packages | see `requirements.txt` (psycopg 3, python-dotenv, Flask, matplotlib) |
 
 ## Prerequisites
